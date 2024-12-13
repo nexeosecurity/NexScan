@@ -3,35 +3,54 @@ name: CI/CD Pipeline for nexScan
 on:
   push:
     branches:
-      - main  # Trigger on pushes to the main branch
+      - main  # Trigger the workflow on push to the 'main' branch
 
 jobs:
-  build:
-    runs-on: ubuntu-latest  # Run on the latest Ubuntu environment
+  build_and_deploy:
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v2  # Checkout your code
+    # Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
+    # Set up Python environment
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
-        username: vdh05  # Docker Hub username stored in secrets
-        password: Vidhi$3800   # Docker Hub password stored in secrets
+        python-version: '3.x'
 
+    # Install dependencies
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    # Build Docker image
     - name: Build Docker image
       run: |
-        docker build -t vdh05/nexscan:latest .  # Build your Docker image
+        docker build -t nexscan:latest .
 
-    - name: Push Docker image to Docker Hub
+    # Log in to DockerHub (if you're pushing to DockerHub, modify as per your registry)
+    - name: Log in to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    # Push Docker image to DockerHub (or your registry)
+    - name: Push Docker image
       run: |
-        docker push vdh05/nexscan:latest  # Push the image to Docker Hub
+        docker tag nexscan:latest ${{ secrets.DOCKER_USERNAME }}/nexscan:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/nexscan:latest
 
-  deploy:
-    runs-on: ubuntu-latest  # Run deployment job on the latest Ubuntu environment
-    needs: build  # Make sure the build job completes before deploying
+    # Set up SSH for deployment
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    steps:
-    - name: Trigger Webhook on Server (Alternative to SSH)
+    # Deploy the Docker container to your server
+    - name: Deploy to server
       run: |
-        curl -X POST http://192.168.1.100/webhook  # Trigger the deployment script on your server
+        ssh -o StrictHostKeyChecking=no username@your-server-ip "docker pull ${{ secrets.DOCKER_USERNAME }}/nexscan:latest && docker run -d --restart unless-stopped --name nexscan-container ${{ secrets.DOCKER_USERNAME }}/nexscan:latest"
