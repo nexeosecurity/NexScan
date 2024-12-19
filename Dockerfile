@@ -1,20 +1,17 @@
-# Use an official Python runtime as the base image
+# Use the official Python image as the base image
 FROM python:3.10-slim
 
-# Set the working directory inside the container
-WORKDIR /app
+# Set the working directory in the container
+WORKDIR /nexscan
 
-# Copy the requirements.txt file first for better caching
-COPY requirements.txt /app/
+# Copy the requirements file into the container
+COPY requirements.txt /nexscan/
 
-# Install dependencies
-RUN pip install  -r requirements.txt
+# Install the dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application source code
-COPY . /app
+# Copy the rest of the application code
+COPY . /nexscan/
 
-# Expose the Flask server port
-EXPOSE 5000
-
-# Run the Flask application
+# Set the command to run your Python application
 CMD ["python", "NexScan.py"]
