@@ -1,135 +1,100 @@
 # NexScan
 
-[![License](https://img.shields.io/badge/license-Custom%20License-blue.svg)](./LICENSE)
+GitHub Link: https://github.com/nexeosecurity/NexScan
+Version: v1.0.0
 
-## Introduction
+**NexScan** is a comprehensive penetration testing tool designed to automate security testing processes. Version 1.0.0 introduces a Command-Line Interface (CLI) to enable powerful features such as subdomain fuzzing, directory fuzzing, and various brute-force attacks (SSH, FTP, MySQL, SMB). This documentation provides all necessary details to understand, install, and operate the tool.
 
-NexScan is a comprehensive penetration testing tool designed to automate security testing processes. Version 1.0.0 introduces a Command-Line Interface (CLI) to enable powerful features such as subdomain fuzzing, directory fuzzing, and various brute-force attacks (SSH, FTP, MySQL, SMB). This documentation provides all necessary details to understand, install, and operate the tool.
+## Installation Methods
+
+NexScan can be installed using any of the following methods:
+
+- GitHub repository
+- Docker container
+
+Choose the installation method that best suits your environment and requirements. Detailed instructions for each method are provided in their respective sections below.
 
 ## Features
 
-Subdomain Fuzzing: Identify subdomains of a target domain.
+NexScan provides several powerful features through its command-line interface. Below are detailed instructions for using each major functionality. All commands follow a consistent structure and support various optional parameters for customization.
 
-Directory Fuzzing: Discover directories and files on web servers.
+### Directory Fuzzing
 
-Brute-force Modules:
-- SSH
-- FTP
-- MySQL
-- SMB
+Directory fuzzing is a powerful feature that allows users to scan web servers for hidden files and directories. This is essential for discovering sensitive resources that may not be directly accessible through the web interface.
 
-Verbose Mode: Display detailed logs during execution.
+Optional arguments for Directory Fuzzing:
 
-Stop on Success: Terminate brute-forcing upon successful credential discovery.
+- -T, --target: Specifies the target for the scan.
+- -f, --file: Specifies the file contains keywords to fuzz
+- -v, --verbose: Enable verbose output
 
-## Installation and Setup
+### Subdomain Fuzzing
 
-### Prerequisites
+Subdomain fuzzing helps identify subdomains of a target domain, which can be critical in understanding the attack surface of a web application.
 
-- Python 3.8 or higher
-- Internet Connectivity
+Optional arguments for Directory Fuzzing:
 
-### Installation Steps
-1. Clone the repository:
-```
-git clone https://github.com/nexeosecurity/NexScan.git
-```
-2. Navigate to the project directory:
-```
-cd NexScan/
-```
-3. Install required Python dependencies:
-```
-pip install -r requirements.txt
-```
+- -T, --target: Specifies the target for the scan.
+- -f, --file: Specifies the file contains keywords to fuzz
+- -v, --verbose: Enable verbose output
 
-## Usage Guide
+### SMB Enumeration
 
-### Basic Command Syntax
-```
-./NexScan.py <module> -T <target> [options]
-```
+The SMB enumeration feature allows users to perform brute-force attacks against SMB (Server Message Block) services. This can help in identifying weak credentials and gaining unauthorized access to shared resources.
 
-### Modules and Options
+Optional arguments for SMB brute-force:
 
-1. Directory Fuzzing
-    - Default
-    ```
-    ./NexScan.py directory -T https://nexeosecurity.tech
-    ```
-    - Verbose Fuzzing
-    ```
-    ./NexScan.py directory -T https://nexeosecurity.tech -v
-    ```
+- -T, --target: Specifies the target for the scan.
+- -p, --password: Specify single password
+- -P, --passwordfile: Specify password list file
+- -u, --user: Specify target username
+- -U, --userfile: Specify file containing list of usernames
+- -s, --stop: Stop on first successful login
+- -v, --verbose: Enable verbose output
+- -port: Specify target port (by default 445)
 
-2. Subdomain Fuzzing
-    - Default
-    ```
-    ./NexScan.py subdomain -T https://nexeosecurity.tech
-    ```
-    - Verbose Fuzzing
-    ```
-    ./NexScan.py subdomain -T https://nexeosecurity.tech -v
-    ```
+### SSH Brute-force
 
-3. SMB Enumeration
-    - With username and password file
-    ```
-    ./NexScan.py smb -T 172.16.173.129 -u kali -P password_list.txt
-    ```
-    - With userfile and password
-    ```
-    ./NexScan.py smb -T 172.16.173.129 -U user_list.txt -p kali
-    ```
-    - With userfile and password file
-    ```
-    ./NexScan.py smb -T 172.16.173.129 -U user_list.txt -P password_list.txt
-    ```
+The SSH brute-force module attempts to gain unauthorized access to SSH servers by testing multiple username and password combinations. This is crucial for assessing the security of SSH services.
 
-4. SSH Bruteforce
-    - With username and password file
-    ```
-    ./NexScan.py ssh -T 172.16.173.129 -u kali -P password_list.txt
-    ```
-    - With userfile and password
-    ```
-    ./NexScan.py ssh -T 172.16.173.129 -U user_list.txt -p kali
-    ```
-    - With userfile and password file
-    ```
-    ./NexScan.py ssh -T 172.16.173.129 -U user_list.txt -P password_list.txt
-    ```
+Optional arguments for SSH brute-force:
 
-5. FTP Bruteforce
-    - Default
-    ```
-    ./NexScan.py ftp -T 172.16.173.129
-    ```
-    - Verbose option
-    ```
-    ./NexScan.py ftp -T 172.16.173.129 -v
-    ```
-    - Stop on Success option
-    ```
-    ./NexScan.py ftp -T 172.16.173.129 -s
-    ```
-    - Both options enabled
-    ```
-    ./NexScan.py ftp -T 172.16.173.129 -s -v
-    ```
+- -T, --target: Specifies the target for the scan.
+- -p, --password: Specify single password
+- -P, --passwordfile: Specify password list file
+- -u, --user: Specify target username
+- -U, --userfile: Specify file containing list of usernames
+- -s, --stop: Stop on first successful login
+- -v, --verbose: Enable verbose output
+- -port: Specify target port (by default 22)
 
-6. MySQL Bruteforce
-    - With username and password file
-    ```
-    ./NexScan.py mysql -T 172.16.173.129 -u admin -P unix_passwords.txt -v
-    ```
+### FTP Brute-force
 
-## License
+The FTP brute-force module attempts to gain unauthorized access to FTP servers by testing multiple username and password combinations.
 
-This project is licensed under the terms of the [Custom License](./LICENSE).
+Optional arguments for FTP brute-force:
 
-For personal and non-commercial use only. For commercial use, please contact Nexeo Security at business@nexeosecurity.tech.
+- -T, --target: Specifies the target for the scan.
+- -p, --password: Specify single password
+- -P, --passwordfile: Specify password list file
+- -u, --user: Specify target username
+- -U, --userfile: Specify file containing list of usernames
+- -s, --stop: Stop on first successful login
+- -v, --verbose: Enable verbose output
 
-## Contributions
+### MySQL Brute-force
 
-We welcome contributions! By contributing to this project, you agree that your contributions will be licensed under the same terms as the project.
+The MySQL brute-force module targets MySQL databases to test username and password combinations for unauthorized access.
+
+Optional arguments for MySQL brute-force:
+
+- -T, --target: Specifies the target for the scan.
+- -p, --password: Specify single password
+- -P, --passwordfile: Specify password list file
+- -u, --user: Specify target username
+- -U, --userfile: Specify file containing list of usernames
+- -s, --stop: Stop on first successful login
+- -v, --verbose: Enable verbose output
+
+> [!NOTE]
+> For more information visit our documentation page.
