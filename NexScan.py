@@ -94,7 +94,7 @@ def main():
     # Subdomain subparser
     subdomain_parser = subparsers.add_parser('subdomain', help='Perform Subdomain Fuzzing')
     subdomain_parser.add_argument('-T', '--target', type=str, help='Specify Target', required=True)
-    subdomain_parser.add_argument('-F', '--file', type=argparse.FileType('r'), default='./lists/subdomain_list.txt', help='Subdomain file')
+    subdomain_parser.add_argument('-f', '--file', type=argparse.FileType('r'), default='./lists/subdomain_list.txt', help='Subdomain file')
     subdomain_parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose output')
 
     args = parser.parse_args()
